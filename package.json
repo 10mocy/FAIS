@@ -11,9 +11,18 @@
     "dev": "babel-node src"
   },
   "dependencies": {
+    "@babel/core": "^7.6.4",
     "@babel/node": "^7.6.3",
     "@babel/preset-env": "^7.6.3",
-    "dotenv": "^8.1.0",
-    "eslint": "^6.5.1"
+    "discord": "^0.8.2",
+    "dotenv": "^8.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.5.1",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
   }
 }
