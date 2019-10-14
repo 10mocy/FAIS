@@ -10,7 +10,7 @@
 1. `yarn install`
 1. `yarn build`
 1. `yarn start`
-1. `✨ 終わり ✨`
+1. ✨ 終わり ✨
 
 ## コントリビュート
 - 適当にIssues立ててくれれば対応します。
