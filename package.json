@@ -5,6 +5,11 @@
   "repository": "https://github.com/neirowork/FAIS.git",
   "author": "Tomotada Saigusa <smmy@neiro.work>",
   "license": "MIT",
+  "scripts": {
+    "start": "node .dist/index",
+    "build": "babel src -d .dist",
+    "dev": "babel-node src"
+  },
   "dependencies": {
     "@babel/node": "^7.6.3",
     "@babel/preset-env": "^7.6.3",
