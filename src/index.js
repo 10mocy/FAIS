@@ -9,7 +9,11 @@ const main = () => {
 
   client.login(process.env.BOT_TOKEN).catch(err => console.error(err))
 
-  client.on('ready', () => console.log('✔ 準備完了'))
+  client.on('ready', () => {
+    console.log('✔ 準備完了')
+    client.user.setActivity('無駄話', { type: 'WATCHING' })
+  })
+
   client.on('message', msg => {
     if (msg.author.id === client.user.id) return
     if (msg.channel.type !== 'text') return
