@@ -22,6 +22,8 @@ const main = () => {
       .then(() => console.log(`✔ 削除完了(${msg.id})`))
       .catch(err => console.error(err))
   })
+
+  client.on('error', err => console.error(err))
 }
 
 main()
