@@ -1,5 +1,6 @@
 import discord from 'discord.js'
 const client = new discord.Client()
+const pkg = require('../package.json')
 
 require('dotenv').config()
 
@@ -11,7 +12,7 @@ const main = () => {
 
   client.on('ready', () => {
     console.log('✔ 準備完了')
-    client.user.setActivity('無駄話', { type: 'WATCHING' })
+    client.user.setActivity(`無駄話 v${pkg.version}`, { type: 'WATCHING' })
   })
 
   client.on('message', msg => {
@@ -19,6 +20,7 @@ const main = () => {
     if (msg.channel.type !== 'text') return
     if (msg.channel.id !== process.env.CHANNEL_ID) return
 
+    if (msg.content.match(/(https?|ftp)(:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)/)) return
     if (msg.attachments.size) return
 
     console.log(`🗑️ メッセージID ${msg.id} を削除中`)
