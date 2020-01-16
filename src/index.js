@@ -12,7 +12,7 @@ const main = () => {
 
   client.on('ready', () => {
     console.log('✔ 準備完了')
-    client.user.setActivity(`無駄話 v${pkg.version}`, { type: 'WATCHING' })
+    client.user.setActivity(`FAIS v${pkg.version}`)
   })
 
   client.on('message', msg => {
@@ -22,6 +22,10 @@ const main = () => {
 
     if (msg.content.match(/(https?|ftp)(:\/\/[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+)/)) return
     if (msg.attachments.size) return
+
+    
+    console.log(`📤 メッセージID ${msg.id} を転送中`)
+    msg.author.send(`#${msg.channel.name} で投稿するためには、画像等の添付が必要です。\n\n**__元のメッセージ__**\n\`\`\`${msg.content}\`\`\``)
 
     console.log(`🗑️ メッセージID ${msg.id} を削除中`)
     msg.delete()
