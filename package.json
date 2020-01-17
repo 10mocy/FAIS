@@ -1,29 +1,38 @@
 {
   "name": "FAIS",
-  "version": "1.12",
+  "version": "1.22",
   "main": "index.js",
   "repository": "https://github.com/neirowork/FAIS.git",
   "author": "Tomotada Saigusa <smmy@neiro.work>",
   "license": "AGPL-3.0-or-later",
   "scripts": {
+    "tsc-init": "tsc --init",
+    "watch": "tsc -w",
     "start": "node .dist/index",
-    "build": "babel src -d .dist",
-    "dev": "babel-node src"
+    "build": "tsc"
   },
   "dependencies": {
     "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
     "@babel/node": "^7.6.3",
     "@babel/preset-env": "^7.6.3",
+    "@types/node": "^13.1.7",
     "discord.js": "^11.5.1",
-    "dotenv": "^8.1.0"
+    "dotenv": "^8.1.0",
+    "json-loader": "^0.5.7",
+    "typescript": "^3.7.5"
   },
   "devDependencies": {
-    "eslint": "^6.5.1",
+    "@typescript-eslint/eslint-plugin": "^2.16.0",
+    "@typescript-eslint/parser": "^2.16.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
     "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-standard": "^4.0.1",
+    "prettier": "^1.19.1"
   }
 }
