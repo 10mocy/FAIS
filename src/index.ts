@@ -172,7 +172,7 @@ class FAISBot {
     }
   }
 
-  private handleShovelCommand(msg: Discord.Message): void {
+  private async handleShovelCommand(msg: Discord.Message): Promise<void> {
     const shovelCmd = msg.content.match(
       /^!sh[gr]? (?:(add|delete)_word|([ad])w) (\S+)(?: (\S+))?$/
     );
@@ -180,6 +180,13 @@ class FAISBot {
 
     if (shovelCmd[1] == 'add' || shovelCmd[2] == 'a') {
       msg.react('📝');
+
+      const count = await this.shovel.countWords();
+
+      if (count > 300) {
+        msg.react('❎');
+        return;
+      }
 
       this.shovel
         .addWord({
