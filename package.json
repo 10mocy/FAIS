@@ -1,6 +1,6 @@
 {
   "name": "FAIS",
-  "version": "1.32-beta",
+  "version": "1.32",
   "main": "index.js",
   "repository": "https://github.com/neirowork/FAIS.git",
   "author": "Tomotada Saigusa <smmy@neiro.work>",
