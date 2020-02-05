@@ -5,8 +5,9 @@ export type Word = {
   _id?: Mongo.ObjectId;
   word: string;
   yomi: string;
-  userTag: string;
-  userId: string;
+  userTag: string | undefined;
+  userId: string | undefined;
+  messageUri: string | undefined;
   timestamp?: number;
 };
 
@@ -47,6 +48,7 @@ export class DB {
         yomi: obj.yomi,
         userTag: obj.userTag,
         userId: obj.userId,
+        messageUri: obj.messageUri,
         timestamp: moment().unix()
       })
       .then(() => {

@@ -19,8 +19,9 @@ const main = async (): Promise<void> => {
     db.addWord({
       word: word[0],
       yomi: word[1],
-      userTag: 'unknown',
-      userId: '0'
+      userTag: undefined,
+      userId: undefined,
+      messageUri: undefined
     })
       .then(() => console.log(`success 単語データ登録完了 ${word[0]}`))
       .catch(err => {

@@ -137,7 +137,7 @@ class FAISBot {
                   },
                   {
                     name: '単語登録者',
-                    value: `${word.userTag}`,
+                    value: word.userTag || '不明',
                     inline: true
                   },
                   {
@@ -146,6 +146,13 @@ class FAISBot {
                       .unix(word.timestamp ? word.timestamp : 0)
                       .format('YYYY/MM/DD HH:mm:ss')}`,
                     inline: true
+                  },
+                  {
+                    name: '登録時のメッセージ',
+                    value: word.messageUri
+                      ? `https://discordapp.com/channels/${word.messageUri}`
+                      : '不明',
+                    inline: false
                   }
                 ]
               }
@@ -177,7 +184,8 @@ class FAISBot {
           word: shovelCmd[3],
           yomi: shovelCmd[4],
           userTag: msg.author.tag,
-          userId: msg.author.id
+          userId: msg.author.id,
+          messageUri: `${msg.guild.id}/${msg.channel.id}/${msg.id}`
         })
         .then(() => {
           console.log(`success 単語データ登録完了 ${shovelCmd[3]}`);
