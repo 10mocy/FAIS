@@ -88,4 +88,11 @@ export class DB {
       return;
     }
   }
+
+  public async countWords(): Promise<number> {
+    return await this.db
+      .collection<Word>('words')
+      .find({})
+      .count();
+  }
 }
