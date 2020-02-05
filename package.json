@@ -1,6 +1,6 @@
 {
   "name": "FAIS",
-  "version": "1.22",
+  "version": "1.32-beta",
   "main": "index.js",
   "repository": "https://github.com/neirowork/FAIS.git",
   "author": "Tomotada Saigusa <smmy@neiro.work>",
@@ -16,10 +16,14 @@
     "@babel/core": "^7.6.4",
     "@babel/node": "^7.6.3",
     "@babel/preset-env": "^7.6.3",
-    "@types/node": "^13.1.7",
+    "@types/mongodb": "^3.3.15",
+    "@types/node": "^13.7.0",
     "discord.js": "^11.5.1",
     "dotenv": "^8.1.0",
+    "iconv-lite": "^0.5.1",
     "json-loader": "^0.5.7",
+    "moment": "^2.24.0",
+    "mongodb": "^3.5.2",
     "typescript": "^3.7.5"
   },
   "devDependencies": {
