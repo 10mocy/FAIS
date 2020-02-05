@@ -88,4 +88,9 @@ export class DB {
       return;
     }
   }
+
+  public async countWords(): Promise<number> {
+    const distinct = await this.db.collection<Word>('words').distinct('word');
+    return distinct.length;
+  }
 }

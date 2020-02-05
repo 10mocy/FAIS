@@ -115,7 +115,7 @@ class FAISBot {
     const args = systemCmd[2].replace(/\s+/g, ' ').split(' ');
     args.shift();
 
-    if (systemCmd[1] === 'findWord') {
+    if (systemCmd[1] === 'findWords') {
       if (args.length !== 1) {
         msg.channel.send('引数が不正です / 使用例 : `!fais findWord <単語>`');
         return;
@@ -167,10 +167,12 @@ class FAISBot {
             });
           }
         });
+    } else if (systemCmd[1] === 'countWords') {
+      this.shovel.countWords().then(i => msg.channel.send(`単語登録数 : ${i}`));
     }
   }
 
-  private handleShovelCommand(msg: Discord.Message): void {
+  private async handleShovelCommand(msg: Discord.Message): Promise<void> {
     const shovelCmd = msg.content.match(
       /^!sh[gr]? (?:(add|delete)_word|([ad])w) (\S+)(?: (\S+))?$/
     );
@@ -178,6 +180,13 @@ class FAISBot {
 
     if (shovelCmd[1] == 'add' || shovelCmd[2] == 'a') {
       msg.react('📝');
+
+      const count = await this.shovel.countWords();
+
+      if (count > 300) {
+        msg.react('❎');
+        return;
+      }
 
       this.shovel
         .addWord({
