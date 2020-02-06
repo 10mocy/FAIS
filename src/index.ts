@@ -174,7 +174,7 @@ class FAISBot {
 
   private async handleShovelCommand(msg: Discord.Message): Promise<void> {
     const shovelCmd = msg.content.match(
-      /^!sh[gr]? (?:(add|delete)_word|([ad])w) (\S+)(?: (\S+))?$/
+      /^!sh[gr]? (?:(add|delete)_word|([ad])w) (\S+)(?: (\S+))?/
     );
     if (!shovelCmd) return;
 

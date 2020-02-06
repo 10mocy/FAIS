@@ -1,7 +1,7 @@
 {
   "name": "fais",
-  "version": "1.33",
-  "main": "index.js",
+  "version": "1.34",
+  "main": ".dist/index.js",
   "repository": "https://github.com/neirowork/FAIS.git",
   "author": "Tomotada Saigusa <smmy@neiro.work>",
   "license": "AGPL-3.0-or-later",
