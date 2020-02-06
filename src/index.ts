@@ -183,7 +183,11 @@ class FAISBot {
 
       const count = await this.shovel.countWords();
 
-      if (count > 300) {
+      if (
+        count > 300 ||
+        Array.from(shovelCmd[3]).length > 60 ||
+        Array.from(shovelCmd[4]).length > 60
+      ) {
         msg.react('❎');
         return;
       }
