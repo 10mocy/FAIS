@@ -30,7 +30,6 @@ const main = async (): Promise<void> => {
     })
       .then(() => {
         console.log(`success 単語データ登録完了 ${process.argv[2]}`);
-        process.exit(0);
       })
       .catch(err => {
         throw err;
