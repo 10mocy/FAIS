@@ -122,7 +122,7 @@ class FAISBot {
       }
 
       this.shovel
-        .findWord({ word: args[0] })
+        .findWord({ word: args[0].toLowerCase() })
         .then((word: Shovel.Word | undefined) => {
           if (word) {
             msg.channel.send({
@@ -178,6 +178,8 @@ class FAISBot {
     );
     if (!shovelCmd) return;
 
+    const word = shovelCmd[3].toLowerCase();
+
     if (shovelCmd[1] == 'add' || shovelCmd[2] == 'a') {
       msg.react('📝');
 
@@ -185,7 +187,7 @@ class FAISBot {
 
       if (
         count > 300 ||
-        Array.from(shovelCmd[3]).length > 60 ||
+        Array.from(word).length > 60 ||
         Array.from(shovelCmd[4]).length > 60
       ) {
         msg.react('❎');
@@ -194,14 +196,14 @@ class FAISBot {
 
       this.shovel
         .addWord({
-          word: shovelCmd[3],
+          word: word,
           yomi: shovelCmd[4],
           userTag: msg.author.tag,
           userId: msg.author.id,
           messageUri: `${msg.guild.id}/${msg.channel.id}/${msg.id}`
         })
         .then(() => {
-          console.log(`success 単語データ登録完了 ${shovelCmd[3]}`);
+          console.log(`success 単語データ登録完了 ${word}`);
           msg.react('✅');
         })
         .catch(err => {
@@ -212,9 +214,9 @@ class FAISBot {
       msg.react('🗑️');
 
       this.shovel
-        .removeWord({ word: shovelCmd[3] })
+        .removeWord({ word })
         .then(() => {
-          console.log(`success 単語データ削除完了 ${shovelCmd[3]}`);
+          console.log(`success 単語データ削除完了 ${word}`);
           msg.react('✅');
         })
         .catch(err => {
