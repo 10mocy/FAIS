@@ -5,6 +5,11 @@ import * as readline from 'readline';
 import * as iconv from 'iconv-lite';
 
 const main = async (): Promise<void> => {
+  if (process.argv.length !== 3) {
+    console.error('引数が足りません');
+    return process.exit(-1);
+  }
+
   const db = new Shovel.DB('mongodb://localhost:27017', 'fais');
   console.log(db);
   await db.start();
@@ -23,7 +28,10 @@ const main = async (): Promise<void> => {
       userId: undefined,
       messageUri: undefined
     })
-      .then(() => console.log(`success 単語データ登録完了 ${word[0]}`))
+      .then(() => {
+        console.log(`success 単語データ登録完了 ${process.argv[2]}`);
+        process.exit(0);
+      })
       .catch(err => {
         throw err;
       });
