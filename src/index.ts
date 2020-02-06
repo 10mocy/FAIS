@@ -131,9 +131,14 @@ class FAISBot {
                 color: parseInt('0x53eb34', 16),
                 fields: [
                   {
+                    name: '単語',
+                    value: word.word,
+                    inline: true
+                  },
+                  {
                     name: 'よみ',
                     value: word.yomi || '(読まない)',
-                    inline: false
+                    inline: true
                   },
                   {
                     name: '単語登録者',
