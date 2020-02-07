@@ -116,18 +116,21 @@ class FAISBot {
     args.shift();
 
     if (systemCmd[1] === 'findWords') {
-      if (args.length !== 1) {
-        msg.channel.send('引数が不正です / 使用例 : `!fais findWord <単語>`');
+      const wordReg = args.join(' ').match(/^"?([^"]+)"?$/);
+      if (!wordReg) {
+        msg.channel.send('引数が不正です / 使用例 : `;fais findWord <単語>`');
         return;
       }
 
+      const queryWord = wordReg[1];
+
       this.shovel
-        .findWord({ word: args[0].toLowerCase() })
+        .findWord({ word: queryWord.toLowerCase() })
         .then((word: Shovel.Word | undefined) => {
           if (word) {
             msg.channel.send({
               embed: {
-                title: `「${args[0]}」の照会結果`,
+                title: `「${queryWord}」の照会結果`,
                 color: parseInt('0x53eb34', 16),
                 fields: [
                   {
@@ -165,9 +168,9 @@ class FAISBot {
           } else {
             msg.channel.send({
               embed: {
-                title: `${args[0]}の照会結果`,
+                title: `${queryWord}の照会結果`,
                 color: parseInt('0xeb4034', 16),
-                description: `「${args[0]}」は辞書に登録されていません`
+                description: `「${queryWord}」は辞書に登録されていません`
               }
             });
           }
