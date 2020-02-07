@@ -109,7 +109,7 @@ class FAISBot {
   }
 
   private handleSystemCommand(msg: Discord.Message): void {
-    const systemCmd = msg.content.match(/^!fais (\S+)(.*)$/);
+    const systemCmd = msg.content.match(/^;fais (\S+)(.*)$/);
     if (!systemCmd) return;
 
     const args = systemCmd[2].replace(/\s+/g, ' ').split(' ');
