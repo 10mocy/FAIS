@@ -185,21 +185,26 @@ class FAISBot {
     //   /^!sh[gr]? (?:(add|delete)_word|([ad])w)\s(\S+)(?:\s(\S+))?/
     // );
     const shovelCmd = msg.content.match(
-      /^!sh (?:(add|delete)_word|([ad])w)\s(?:"([^"]+)"|(.+))(?:\s(?:"([^"]+)"|(.+)))?/
+      /^!sh (?:(add|delete)_word|([ad])w)\s(\S+)(?:\s(\S+))?/
     );
     if (!shovelCmd) return;
 
-    const word = (shovelCmd[3] || shovelCmd[4]).toLowerCase();
+    this.shovel.recordLog({
+      userTag: msg.author.tag,
+      userId: msg.author.id,
+      messageUri: `${msg.guild.id}/${msg.channel.id}/${msg.id}`
+    });
+
+    const word = shovelCmd[3].toLowerCase();
 
     if (shovelCmd[1] == 'add' || shovelCmd[2] == 'a') {
       msg.react('📝');
 
       const count = await this.shovel.countWords();
-
       if (
         count > 300 ||
         Array.from(word).length > 60 ||
-        Array.from((shovelCmd[5] || shovelCmd[6]).toLowerCase()).length > 60
+        Array.from(shovelCmd[4]).length > 60
       ) {
         msg.react('❎');
         return;
@@ -208,7 +213,7 @@ class FAISBot {
       this.shovel
         .addWord({
           word,
-          yomi: (shovelCmd[5] || shovelCmd[6]).toLowerCase(),
+          yomi: shovelCmd[4].toLowerCase(),
           userTag: msg.author.tag,
           userId: msg.author.id,
           messageUri: `${msg.guild.id}/${msg.channel.id}/${msg.id}`

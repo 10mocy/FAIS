@@ -93,4 +93,17 @@ export class DB {
     const distinct = await this.db.collection<Word>('words').distinct('word');
     return distinct.length;
   }
+
+  public async recordLog(obj: {
+    userTag: string;
+    userId: string;
+    messageUri: string;
+  }): Promise<void> {
+    this.db.collection('logs').insertOne({
+      userTag: obj.userTag,
+      userId: obj.userId,
+      messageUri: obj.messageUri,
+      timestamp: moment().unix()
+    });
+  }
 }
