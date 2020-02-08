@@ -192,6 +192,7 @@ class FAISBot {
     this.shovel.recordLog({
       userTag: msg.author.tag,
       userId: msg.author.id,
+      message: msg.content,
       messageUri: `${msg.guild.id}/${msg.channel.id}/${msg.id}`
     });
 

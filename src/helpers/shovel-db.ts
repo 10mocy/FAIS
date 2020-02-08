@@ -97,11 +97,13 @@ export class DB {
   public async recordLog(obj: {
     userTag: string;
     userId: string;
+    message: string;
     messageUri: string;
   }): Promise<void> {
     this.db.collection('logs').insertOne({
       userTag: obj.userTag,
       userId: obj.userId,
+      message: obj.message,
       messageUri: obj.messageUri,
       timestamp: moment().unix()
     });
