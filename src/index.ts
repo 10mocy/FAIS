@@ -8,16 +8,20 @@ import * as Shovel from './helpers/shovel-db';
 class FAISBot {
   private token: string;
   private watchChannelId: string;
+  private noticeChannelId: string;
 
   private bot: Discord.Client;
   private shovel: Shovel.DB;
 
-  constructor(token: string | undefined, chId: string | undefined) {
+  constructor(token: string | undefined, chId: string | undefined, noticeChId: string | undefined) {
     if (!token) {
       throw new ReferenceError('トークンが入力されていません。');
     }
     if (!chId) {
       throw new ReferenceError('監視するチャンネルのIDが入力されていません。');
+    }
+    if (!noticeChId) {
+      throw new ReferenceError('システム通知チャンネルのIDが入力されていません。');
     }
 
     this.token = token;
@@ -25,6 +29,7 @@ class FAISBot {
     this.shovel = new Shovel.DB('mongodb://localhost:27017', 'fais');
 
     this.watchChannelId = chId;
+    this.noticeChannelId = noticeChId;
   }
 
   public async start(): Promise<void> {
@@ -34,6 +39,8 @@ class FAISBot {
     this.handleReady();
     this.handleError();
     this.handleMessage();
+
+    this.handleJoin();
   }
 
   private handleReady(): void {
@@ -243,13 +250,25 @@ class FAISBot {
     }
   }
 
+  private handleJoin(): void {
+    this.bot.on('guildMemberAdd', (member: Discord.GuildMember) => {
+      const channel = this.bot.channels.get(this.noticeChannelId);
+      if(!channel || !(channel instanceof Discord.TextChannel)) return;
+      
+      channel
+        .send(`<@!${member.id}> さんようこそ！\n${channel.guild.memberCount}人目のストームワーカーです。`)
+        .then(() => console.log('info サーバー参加通知完了'));
+      })
+  }
+
   private deleteMessage(msg: Discord.Message): void {
     msg
       .delete()
-      .then(() => console.log(`info 削除完了 ${msg.id}`))
+      .then(() => console.log(`info 削除完了 ${msg.id} ${msg.content}`))
       .catch(err => console.error(err));
   }
+
 }
 
-const fais = new FAISBot(process.env.BOT_TOKEN, process.env.CHANNEL_ID);
+const fais = new FAISBot(process.env.BOT_TOKEN, process.env.CHANNEL_ID, process.env.NOTICE_CHANNEL_ID);
 fais.start();
