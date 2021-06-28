@@ -86,7 +86,9 @@ class FAISBot {
 
       const oldMessages = this.messageOutputDump[authorId] !== undefined ? this.messageOutputDump[authorId] : [];
       this.messageOutputDump[authorId] = [...oldMessages, react.message.content];
-      console.log(this.messageOutputDump[authorId])
+
+      react.message.react('✅');
+      console.log(this.messageOutputDump[authorId]);
     })
   }
 
