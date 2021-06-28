@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-import Discord from 'discord.js';
+import Discord, { MessageReaction } from 'discord.js';
 import moment from 'moment';
 
 import * as Shovel from './helpers/shovel-db';
@@ -12,6 +12,10 @@ class FAISBot {
 
   private bot: Discord.Client;
   private shovel: Shovel.DB;
+
+  private messageOutputDump: {
+    [key: string]: string[];
+  }
 
   constructor(token: string | undefined, chId: string | undefined, noticeChId: string | undefined) {
     if (!token) {
@@ -30,6 +34,8 @@ class FAISBot {
 
     this.watchChannelId = chId;
     this.noticeChannelId = noticeChId;
+
+    this.messageOutputDump = {};
   }
 
   public async start(): Promise<void> {
@@ -39,8 +45,10 @@ class FAISBot {
     this.handleReady();
     this.handleError();
     this.handleMessage();
+    this.handleReact();
 
     this.handleJoin();
+
   }
 
   private handleReady(): void {
@@ -69,6 +77,17 @@ class FAISBot {
 
       this.handleSystemCommand(msg);
     });
+  }
+
+  private handleReact(): void {
+    this.bot.on('messageReactionAdd', (react: MessageReaction) => {
+      if(react.emoji.toString() !== '📝') return
+      const authorId = react.message.author.id;
+
+      const oldMessages = this.messageOutputDump[authorId] !== undefined ? this.messageOutputDump[authorId] : [];
+      this.messageOutputDump[authorId] = [...oldMessages, react.message.content];
+      console.log(this.messageOutputDump[authorId])
+    })
   }
 
   private handleChat(msg: Discord.Message): void {
@@ -184,6 +203,16 @@ class FAISBot {
         });
     } else if (systemCmd[1] === 'countWords') {
       this.shovel.countWords().then(i => msg.channel.send(`単語登録数 : ${i}`));
+    } else if(systemCmd[1] === 'outputMessages') {
+      if(this.messageOutputDump[msg.author.id] === undefined || this.messageOutputDump[msg.author.id].length === 0) {
+        msg.channel.send('メッセージが選択されていません。')
+        return
+      }
+      
+      const outputText = this.messageOutputDump[msg.author.id].join('\n')
+      this.messageOutputDump[msg.author.id] = [];
+
+      msg.channel.send(`\`\`\`\n${outputText}\n\`\`\``)
     }
   }
 
