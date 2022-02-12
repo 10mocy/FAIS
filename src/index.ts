@@ -11,13 +11,17 @@ class FAISBot {
   private noticeChannelId: string;
 
   private bot: Discord.Client;
-  private shovel: Shovel.DB;
+  // private shovel: Shovel.DB;
 
   private messageOutputDump: {
     [key: string]: string[];
-  }
+  };
 
-  constructor(token: string | undefined, chId: string | undefined, noticeChId: string | undefined) {
+  constructor(
+    token: string | undefined,
+    chId: string | undefined,
+    noticeChId: string | undefined
+  ) {
     if (!token) {
       throw new ReferenceError('トークンが入力されていません。');
     }
@@ -25,12 +29,14 @@ class FAISBot {
       throw new ReferenceError('監視するチャンネルのIDが入力されていません。');
     }
     if (!noticeChId) {
-      throw new ReferenceError('システム通知チャンネルのIDが入力されていません。');
+      throw new ReferenceError(
+        'システム通知チャンネルのIDが入力されていません。'
+      );
     }
 
     this.token = token;
     this.bot = new Discord.Client();
-    this.shovel = new Shovel.DB('mongodb://localhost:27017', 'fais');
+    // this.shovel = new Shovel.DB('mongodb://localhost:27017', 'fais');
 
     this.watchChannelId = chId;
     this.noticeChannelId = noticeChId;
@@ -40,7 +46,7 @@ class FAISBot {
 
   public async start(): Promise<void> {
     this.bot.login(this.token);
-    this.shovel.start();
+    // this.shovel.start();
 
     this.handleReady();
     this.handleError();
@@ -48,7 +54,6 @@ class FAISBot {
     this.handleReact();
 
     this.handleJoin();
-
   }
 
   private handleReady(): void {
@@ -81,15 +86,21 @@ class FAISBot {
 
   private handleReact(): void {
     this.bot.on('messageReactionAdd', (react: MessageReaction) => {
-      if(react.emoji.toString() !== '📝') return
+      if (react.emoji.toString() !== '📝') return;
       const authorId = react.message.author.id;
 
-      const oldMessages = this.messageOutputDump[authorId] !== undefined ? this.messageOutputDump[authorId] : [];
-      this.messageOutputDump[authorId] = [...oldMessages, react.message.content];
+      const oldMessages =
+        this.messageOutputDump[authorId] !== undefined
+          ? this.messageOutputDump[authorId]
+          : [];
+      this.messageOutputDump[authorId] = [
+        ...oldMessages,
+        react.message.content
+      ];
 
       react.message.react('✅');
       console.log(this.messageOutputDump[authorId]);
-    })
+    });
   }
 
   private handleChat(msg: Discord.Message): void {
@@ -152,69 +163,72 @@ class FAISBot {
 
       const queryWord = wordReg[1];
 
-      this.shovel
-        .findWord({ word: queryWord.toLowerCase() })
-        .then((word: Shovel.Word | undefined) => {
-          if (word) {
-            msg.channel.send({
-              embed: {
-                title: `「${queryWord}」の照会結果`,
-                color: parseInt('0x53eb34', 16),
-                fields: [
-                  {
-                    name: '単語',
-                    value: word.word,
-                    inline: true
-                  },
-                  {
-                    name: 'よみ',
-                    value: word.yomi || '(読まない)',
-                    inline: true
-                  },
-                  {
-                    name: '単語登録者',
-                    value: word.userTag || '不明',
-                    inline: true
-                  },
-                  {
-                    name: '登録日',
-                    value: `${moment
-                      .unix(word.timestamp ? word.timestamp : 0)
-                      .format('YYYY/MM/DD HH:mm:ss')}`,
-                    inline: true
-                  },
-                  {
-                    name: '登録時のメッセージ',
-                    value: word.messageUri
-                      ? `https://discordapp.com/channels/${word.messageUri}`
-                      : '不明',
-                    inline: false
-                  }
-                ]
-              }
-            });
-          } else {
-            msg.channel.send({
-              embed: {
-                title: `${queryWord}の照会結果`,
-                color: parseInt('0xeb4034', 16),
-                description: `「${queryWord}」は辞書に登録されていません`
-              }
-            });
-          }
-        });
+      // this.shovel
+      //   .findWord({ word: queryWord.toLowerCase() })
+      //   .then((word: Shovel.Word | undefined) => {
+      //     if (word) {
+      //       msg.channel.send({
+      //         embed: {
+      //           title: `「${queryWord}」の照会結果`,
+      //           color: parseInt('0x53eb34', 16),
+      //           fields: [
+      //             {
+      //               name: '単語',
+      //               value: word.word,
+      //               inline: true
+      //             },
+      //             {
+      //               name: 'よみ',
+      //               value: word.yomi || '(読まない)',
+      //               inline: true
+      //             },
+      //             {
+      //               name: '単語登録者',
+      //               value: word.userTag || '不明',
+      //               inline: true
+      //             },
+      //             {
+      //               name: '登録日',
+      //               value: `${moment
+      //                 .unix(word.timestamp ? word.timestamp : 0)
+      //                 .format('YYYY/MM/DD HH:mm:ss')}`,
+      //               inline: true
+      //             },
+      //             {
+      //               name: '登録時のメッセージ',
+      //               value: word.messageUri
+      //                 ? `https://discordapp.com/channels/${word.messageUri}`
+      //                 : '不明',
+      //               inline: false
+      //             }
+      //           ]
+      //         }
+      //       });
+      //     } else {
+      //       msg.channel.send({
+      //         embed: {
+      //           title: `${queryWord}の照会結果`,
+      //           color: parseInt('0xeb4034', 16),
+      //           description: `「${queryWord}」は辞書に登録されていません`
+      //         }
+      //       });
+      //     }
+      //   });
     } else if (systemCmd[1] === 'countWords') {
-      this.shovel.countWords().then(i => msg.channel.send(`単語登録数 : ${i}`));
-    } else if(systemCmd[1] === 'outputMessages') {
-      if(this.messageOutputDump[msg.author.id] === undefined || this.messageOutputDump[msg.author.id].length === 0) {
-        msg.channel.send('メッセージが選択されていません。')
-        return
+      // this.shovel.countWords().then(i => msg.channel.send(`単語登録数 : ${i}`));
+    } else if (systemCmd[1] === 'outputMessages') {
+      if (
+        this.messageOutputDump[msg.author.id] === undefined ||
+        this.messageOutputDump[msg.author.id].length === 0
+      ) {
+        msg.channel.send('メッセージが選択されていません。');
+        return;
       }
-      
-      const outputText = this.messageOutputDump[msg.author.id].join('\n')
+
+      const outputText = this.messageOutputDump[msg.author.id].join('\n');
       this.messageOutputDump[msg.author.id] = [];
 
-      msg.channel.send(`\`\`\`\n${outputText}\n\`\`\``)
+      msg.channel.send(`\`\`\`\n${outputText}\n\`\`\``);
     }
   }
 
@@ -227,69 +241,70 @@ class FAISBot {
     );
     if (!shovelCmd) return;
 
-    this.shovel.recordLog({
-      userTag: msg.author.tag,
-      userId: msg.author.id,
-      message: msg.content,
-      messageUri: `${msg.guild.id}/${msg.channel.id}/${msg.id}`
-    });
+    // this.shovel.recordLog({
+    //   userTag: msg.author.tag,
+    //   userId: msg.author.id,
+    //   message: msg.content,
+    //   messageUri: `${msg.guild.id}/${msg.channel.id}/${msg.id}`
+    // });
 
     const word = shovelCmd[3].toLowerCase();
 
     if (shovelCmd[1] == 'add' || shovelCmd[2] == 'a') {
       msg.react('📝');
 
-      const count = await this.shovel.countWords();
-      if (
-        count > 300 ||
-        Array.from(word).length > 60 ||
-        Array.from(shovelCmd[4]).length > 60
-      ) {
-        msg.react('❎');
-        return;
-      }
+      // const count = await this.shovel.countWords();
+      // if (
+      //   count > 300 ||
+      //   Array.from(word).length > 60 ||
+      //   Array.from(shovelCmd[4]).length > 60
+      // ) {
+      //   msg.react('❎');
+      //   return;
+      // }
 
-      this.shovel
-        .addWord({
-          word,
-          yomi: shovelCmd[4].toLowerCase(),
-          userTag: msg.author.tag,
-          userId: msg.author.id,
-          messageUri: `${msg.guild.id}/${msg.channel.id}/${msg.id}`
-        })
-        .then(() => {
-          console.log(`success 単語データ登録完了 ${word}`);
-          msg.react('✅');
-        })
-        .catch(err => {
-          console.error(`error ${err}`);
-          msg.react('❎');
-        });
+      // this.shovel
+      //   .addWord({
+      //     word,
+      //     yomi: shovelCmd[4].toLowerCase(),
+      //     userTag: msg.author.tag,
+      //     userId: msg.author.id,
+      //     messageUri: `${msg.guild.id}/${msg.channel.id}/${msg.id}`
+      //   })
+      //   .then(() => {
+      //     console.log(`success 単語データ登録完了 ${word}`);
+      //     msg.react('✅');
+      //   })
+      //   .catch(err => {
+      //     console.error(`error ${err}`);
+      //     msg.react('❎');
+      //   });
     } else if (shovelCmd[1] == 'delete' || shovelCmd[2] == 'd') {
-      msg.react('🗑️');
-
-      this.shovel
-        .removeWord({ word })
-        .then(() => {
-          console.log(`success 単語データ削除完了 ${word}`);
-          msg.react('✅');
-        })
-        .catch(err => {
-          console.error(`error ${err}`);
-          msg.react('❎');
-        });
+      // msg.react('🗑️');
+      // this.shovel
+      //   .removeWord({ word })
+      //   .then(() => {
+      //     console.log(`success 単語データ削除完了 ${word}`);
+      //     msg.react('✅');
+      //   })
+      //   .catch(err => {
+      //     console.error(`error ${err}`);
+      //     msg.react('❎');
+      //   });
     }
   }
 
   private handleJoin(): void {
     this.bot.on('guildMemberAdd', (member: Discord.GuildMember) => {
       const channel = this.bot.channels.get(this.noticeChannelId);
-      if(!channel || !(channel instanceof Discord.TextChannel)) return;
-      
+      if (!channel || !(channel instanceof Discord.TextChannel)) return;
+
       channel
-        .send(`<@!${member.id}> さんようこそ！\n${channel.guild.memberCount}人目のストームワーカーです。`)
+        .send(
+          `<@!${member.id}> さんようこそ！\n${channel.guild.memberCount}人目のストームワーカーです。`
+        )
         .then(() => console.log('info サーバー参加通知完了'));
-      })
+    });
   }
 
   private deleteMessage(msg: Discord.Message): void {
@@ -298,8 +313,11 @@ class FAISBot {
       .then(() => console.log(`info 削除完了 ${msg.id} ${msg.content}`))
       .catch(err => console.error(err));
   }
-
 }
 
-const fais = new FAISBot(process.env.BOT_TOKEN, process.env.CHANNEL_ID, process.env.NOTICE_CHANNEL_ID);
+const fais = new FAISBot(
+  process.env.BOT_TOKEN,
+  process.env.CHANNEL_ID,
+  process.env.NOTICE_CHANNEL_ID
+);
 fais.start();
