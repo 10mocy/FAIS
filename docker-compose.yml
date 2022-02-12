@@ -1,0 +1,25 @@
+version: '3'
+services:
+  client:
+    build: ./
+    restart: always
+    volumes:
+      - node_modules:/app/node_modules
+  # mongo:
+  #   image: mongo
+  #   container_name: 'mongo'
+  #   command:
+  #     - mongod
+  #   # ports:
+  #   #   - 27017:27017
+  #   volumes:
+  #     - mongo-data:/data/db
+  #     - ./server/dump:/dump
+  #   restart: always
+  # mongo-data:
+  #   image: busybox
+
+volumes:
+  # mongo-data:
+  node_modules:
+  # server_node_modules:
