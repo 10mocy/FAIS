@@ -1,5 +1,5 @@
 # FAIS
-> 🖕 Fuck An Irrelevant Story / メッセージ削除BOT
+> ✨ Finalize An Irrelevant Story / メッセージ削除BOT
 
 ## 機能
 - .envファイルで指定したチャンネルを対象に、添付ファイルが付いたメッセージ以外を削除します。
