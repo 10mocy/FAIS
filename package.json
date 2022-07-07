@@ -22,7 +22,7 @@
     "dotenv": "^8.1.0",
     "iconv-lite": "^0.5.1",
     "json-loader": "^0.5.7",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "mongodb": "^3.5.2",
     "typescript": "^3.7.5"
   },
